@@ -87,5 +87,7 @@ private:
 	// 球モデル
 	std::unique_ptr<DirectX::Model> m_modelBall;
 	// 球ワールド行列
-	DirectX::SimpleMath::Matrix m_worldBall;
+	DirectX::SimpleMath::Matrix m_worldBall[20];
+	// 球の角度
+	float m_AngleBall;
 };

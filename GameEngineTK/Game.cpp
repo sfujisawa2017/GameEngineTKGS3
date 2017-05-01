@@ -84,7 +84,7 @@ void Game::Initialize(HWND window, int width, int height)
 	// モデルの読み込み
 	m_modelGround = Model::CreateFromCMO(
 		m_d3dDevice.Get(),
-		L"Resources/ground1m.cmo",
+		L"Resources/ground200m.cmo",
 		*m_factory
 	);
 	// モデルの読み込み
@@ -93,6 +93,8 @@ void Game::Initialize(HWND window, int width, int height)
 		L"Resources/ball.cmo",
 		*m_factory
 	);
+
+	m_AngleBall = 0.0f;
 }
 
 // Executes the basic game loop.
@@ -109,31 +111,53 @@ void Game::Tick()
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-    float elapsedTime = float(timer.GetElapsedSeconds());
+	float elapsedTime = float(timer.GetElapsedSeconds());
 
-    // TODO: Add your game logic here.
-    elapsedTime;
+	// TODO: Add your game logic here.
+	elapsedTime;
 	// 毎フレーム更新処理
 	m_debugCamera->Update();
 	// ビュー行列を取得
 	m_view = m_debugCamera->GetCameraMatrix();
 
+	m_AngleBall += 1.0f;
+
 	// 球のワールド行列を計算
-	// スケーリング
-	Matrix scalemat = Matrix::CreateScale(0.1f);
-	// ロール
-	Matrix rotmatz = Matrix::CreateRotationZ(XMConvertToRadians(15.0f));
-	// ピッチ（仰角）
-	Matrix rotmatx = Matrix::CreateRotationX(XMConvertToRadians(15.0f));
-	// ヨー（方位角）
-	Matrix rotmaty = Matrix::CreateRotationY(XMConvertToRadians(15.0f));
-	// 回転行列（合成）
-	Matrix rotmat = rotmatz * rotmatx * rotmaty;
-	// 平行移動
-	Matrix transmat = Matrix::CreateTranslation(10.0f, 0, 20);
-	// ワールド行列の合成
-	m_worldBall = scalemat * rotmat * transmat;
-	//m_worldBall = transmat * rotmat * scalemat;
+	for (int i = 0; i < 10; i++)
+	{
+		// スケーリング
+		Matrix scalemat = Matrix::CreateScale(1.0f);
+		// ロール
+		Matrix rotmatz = Matrix::CreateRotationZ(XMConvertToRadians(0));
+		// ピッチ（仰角）
+		Matrix rotmatx = Matrix::CreateRotationX(XMConvertToRadians(0));
+		// ヨー（方位角）
+		Matrix rotmaty = Matrix::CreateRotationY(XMConvertToRadians(360.0f / 10 * i + m_AngleBall));
+		// 回転行列（合成）
+		Matrix rotmat = rotmatz * rotmatx * rotmaty;
+		// 平行移動
+		Matrix transmat = Matrix::CreateTranslation(20, 0, 0);
+		// ワールド行列の合成
+		m_worldBall[i] = transmat * rotmat;
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		// スケーリング
+		Matrix scalemat = Matrix::CreateScale(1.0f);
+		// ロール
+		Matrix rotmatz = Matrix::CreateRotationZ(XMConvertToRadians(0));
+		// ピッチ（仰角）
+		Matrix rotmatx = Matrix::CreateRotationX(XMConvertToRadians(0));
+		// ヨー（方位角）
+		Matrix rotmaty = Matrix::CreateRotationY(XMConvertToRadians(360.0f / 10 * i - m_AngleBall));
+		// 回転行列（合成）
+		Matrix rotmat = rotmatz * rotmatx * rotmaty;
+		// 平行移動
+		Matrix transmat = Matrix::CreateTranslation(40, 0, 0);
+		// ワールド行列の合成
+		m_worldBall[i+10] = transmat * rotmat;
+	}
 }
 
 // Draws the scene.
@@ -179,24 +203,27 @@ void Game::Render()
 	// 天球モデルの描画
 	m_modelSkydome->Draw(m_d3dContext.Get(),
 		m_states,
-		m_world,
+		Matrix::Identity,
 		m_view,
 		m_proj
 	);
 	// 地面モデルの描画
 	m_modelGround->Draw(m_d3dContext.Get(),
 		m_states,
-		m_world,
+		Matrix::Identity,
 		m_view,
 		m_proj
 	);
 	// 球モデルの描画
-	m_modelBall->Draw(m_d3dContext.Get(),
-		m_states,
-		m_worldBall,
-		m_view,
-		m_proj
-	);
+	for (int i = 0; i < 20; i++)
+	{
+		m_modelBall->Draw(m_d3dContext.Get(),
+			m_states,
+			m_worldBall[i],
+			m_view,
+			m_proj
+		);
+	}
 
 	m_batch->Begin();
 	VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);
