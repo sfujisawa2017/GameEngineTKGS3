@@ -93,8 +93,18 @@ void Game::Initialize(HWND window, int width, int height)
 		L"Resources/ball.cmo",
 		*m_factory
 	);
+	// モデルの読み込み
+	m_modelHead = Model::CreateFromCMO(
+		m_d3dDevice.Get(),
+		L"Resources/head.cmo",
+		*m_factory
+	);
 
 	m_AngleBall = 0.0f;
+	// キーボードの初期化
+	keyboard = std::make_unique<Keyboard>();
+
+	tank_angle = 0.0f;
 }
 
 // Executes the basic game loop.
@@ -138,7 +148,7 @@ void Game::Update(DX::StepTimer const& timer)
 		// 平行移動
 		Matrix transmat = Matrix::CreateTranslation(20, 0, 0);
 		// ワールド行列の合成
-		m_worldBall[i] = transmat * rotmat;
+		m_worldBall[i] = rotmat * transmat;
 	}
 
 	for (int i = 0; i < 10; i++)
@@ -157,6 +167,55 @@ void Game::Update(DX::StepTimer const& timer)
 		Matrix transmat = Matrix::CreateTranslation(40, 0, 0);
 		// ワールド行列の合成
 		m_worldBall[i+10] = transmat * rotmat;
+	}
+
+	// キーボードの状態取得
+	Keyboard::State g_key = keyboard->GetState();
+
+	// Aキーが押されていたら
+	if (g_key.A)
+	{
+		// 自機の角度を回転させる
+		tank_angle += 0.03f;
+	}
+
+	// Dキーが押されていたら
+	if (g_key.D)
+	{
+		// 自機の角度を回転させる
+		tank_angle += -0.03f;
+	}
+
+	// Wキーが押されていたら
+	if (g_key.W)
+	{
+		// 移動量のベクトル
+		Vector3 moveV(0, 0, -0.1f);
+		// 移動量ベクトルを自機の角度分回転させる
+		//moveV = Vector3::TransformNormal(moveV, tank_world);
+		Matrix rotmat = Matrix::CreateRotationY(tank_angle);
+		moveV = Vector3::TransformNormal(moveV, rotmat);
+		// 自機の座標を移動させる
+		tank_pos += moveV;
+	}
+
+	// Sキーが押されていたら
+	if (g_key.S)
+	{
+		// 移動量のベクトル
+		Vector3 moveV(0, 0, +0.1f);
+		// 移動量ベクトルを自機の角度分回転させる
+		Matrix rotmat = Matrix::CreateRotationY(tank_angle);
+		moveV = Vector3::TransformNormal(moveV, rotmat);
+		// 自機の座標を移動させる
+		tank_pos += moveV;
+	}
+
+	{// 自機のワールド行列を計算
+		Matrix rotmat = Matrix::CreateRotationY(tank_angle);
+		Matrix transmat = Matrix::CreateTranslation(tank_pos);
+		// ワールド行列を合成
+		tank_world = rotmat * transmat;
 	}
 }
 
@@ -224,6 +283,13 @@ void Game::Render()
 			m_proj
 		);
 	}
+	// 頭部モデルの描画
+	m_modelHead->Draw(m_d3dContext.Get(),
+		m_states,
+		tank_world,
+		m_view,
+		m_proj
+	);
 
 	m_batch->Begin();
 	VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);
