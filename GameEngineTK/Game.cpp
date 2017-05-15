@@ -105,6 +105,10 @@ void Game::Initialize(HWND window, int width, int height)
 	keyboard = std::make_unique<Keyboard>();
 
 	tank_angle = 0.0f;
+
+	// カメラの生成
+	m_Camera = std::make_unique<FollowCamera>(
+		m_outputWidth, m_outputHeight);
 }
 
 // Executes the basic game loop.
@@ -128,7 +132,39 @@ void Game::Update(DX::StepTimer const& timer)
 	// 毎フレーム更新処理
 	m_debugCamera->Update();
 	// ビュー行列を取得
-	m_view = m_debugCamera->GetCameraMatrix();
+	//m_view = m_debugCamera->GetCameraMatrix();
+
+	{// 自機に追従するカメラ
+		m_Camera->SetTargetPos(tank_pos);
+		m_Camera->SetTargetAngle(tank_angle);
+
+		// カメラの更新
+		m_Camera->Update();
+		m_view = m_Camera->GetView();
+		m_proj = m_Camera->GetProj();
+	}
+
+	//// どこから見るのか（視点）
+	//Vector3 eyepos(0, 0, 5.0f);
+	//// どこを見るのか（注視点/参照点)
+	//Vector3 refpos(0, 0, 0);
+	//// どちらが画面上方向か（上方向ベクトル）
+	//static float angle = 0.0f;
+	//angle += 0.1f;
+	//Vector3 upvec(cosf(angle), sinf(angle), 0);
+	//upvec.Normalize();	// ベクトルの正規化（長さを１にする）
+	//// ビュー行列を生成
+	//m_view = Matrix::CreateLookAt(eyepos, refpos, upvec);
+	// 垂直方向視野角
+	//float fovY = XMConvertToRadians(60.0f);
+	//// アスペクト比（横・縦の比率）
+	//float aspect = (float)m_outputWidth / m_outputHeight;
+	//// 手前の表示限界距離
+	//float nearclip = 0.1f;
+	//// 奥の表示限界距離
+	//float farclip = 1000.0f;
+	//// 射影行列の生成（透視投影）
+	//m_proj = Matrix::CreatePerspectiveFieldOfView(fovY, aspect, nearclip, farclip);
 
 	m_AngleBall += 1.0f;
 
