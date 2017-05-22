@@ -1,5 +1,5 @@
-/// <summary>
-/// 3DƒIƒuƒWƒFƒNƒg‚ÌƒNƒ‰ƒX
+ï»¿/// <summary>
+/// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¯ãƒ©ã‚¹
 /// </summary>
 #pragma once
 
@@ -15,64 +15,64 @@
 
 class Obj3d
 {
-	// Ã“Iƒƒ“ƒo
+	// é™çš„ãƒ¡ãƒ³ãƒ
 public:
-	// Ã“Iƒƒ“ƒo•Ï”‚Ì‰Šú‰»
+	// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–
 	static void InitializeStatic(
 		Microsoft::WRL::ComPtr<ID3D11Device>            d3dDevice,
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext>     d3dContext,
 		Camera* camera);
 private:
-	// ƒfƒoƒCƒX
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static Microsoft::WRL::ComPtr<ID3D11Device>            m_d3dDevice;
-	// ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext>     m_d3dContext;
-	// ƒJƒƒ‰
+	// ã‚«ãƒ¡ãƒ©
 	static Camera* m_Camera;
-	// ”Ä—p•`‰æƒXƒe[ƒg
+	// æ±Žç”¨æç”»ã‚¹ãƒ†ãƒ¼ãƒˆ
 	static std::unique_ptr<DirectX::CommonStates> m_states;
-	// ƒGƒtƒFƒNƒgƒtƒ@ƒNƒgƒŠ
+	// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¯ãƒˆãƒª
 	static std::unique_ptr<DirectX::EffectFactory> m_factory;
 
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Obj3d();
 
-	// ƒ‚ƒfƒ‹‚ðƒ[ƒh
+	// ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰
 	void LoadModel(const wchar_t* fileName);
 
-	// XV
+	// æ›´æ–°
 	void Update();
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
 	// setter
-	// ƒXƒP[ƒŠƒ“ƒO(XYZ)
+	// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°(XYZ)
 
-	// ‰ñ“]ŠpiXYZ)
+	// å›žè»¢è§’ï¼ˆXYZ)
 
-	// •½sˆÚ“®(XYZ)
+	// å¹³è¡Œç§»å‹•(XYZ)
 
 	// getter
-	// ƒXƒP[ƒŠƒ“ƒO(XYZ)
+	// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°(XYZ)
 
-	// ‰ñ“]ŠpiXYZ)
+	// å›žè»¢è§’ï¼ˆXYZ)
 
-	// •½sˆÚ“®(XYZ)
+	// å¹³è¡Œç§»å‹•(XYZ)
 
-	// ƒ[ƒ‹ƒhs—ñ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
 
 private:
-	// ƒƒ“ƒo•Ï”
-	// 3Dƒ‚ƒfƒ‹
+	// ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// 3Dãƒ¢ãƒ‡ãƒ«
 
-	// ƒXƒP[ƒŠƒ“ƒO(XYZ)
+	// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°(XYZ)
 
-	// ‰ñ“]ŠpiXYZ)
+	// å›žè»¢è§’ï¼ˆXYZ)
 
-	// •½sˆÚ“®(XYZ)
+	// å¹³è¡Œç§»å‹•(XYZ)
 
-	// ƒ[ƒ‹ƒhs—ñ
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
 
 };

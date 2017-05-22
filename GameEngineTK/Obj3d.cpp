@@ -1,18 +1,18 @@
-#include "Obj3d.h"
+ï»¿#include "Obj3d.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-// Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-// ƒfƒoƒCƒX
+// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å®Ÿä½“
+// ãƒ‡ãƒã‚¤ã‚¹
 Microsoft::WRL::ComPtr<ID3D11Device>            Obj3d::m_d3dDevice;
-// ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg
+// ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
 Microsoft::WRL::ComPtr<ID3D11DeviceContext>     Obj3d::m_d3dContext;
-// ƒJƒƒ‰
+// ã‚«ãƒ¡ãƒ©
 Camera* Obj3d::m_Camera;
-// ”Ä—p•`‰æƒXƒe[ƒg
+// æ±ç”¨æç”»ã‚¹ãƒ†ãƒ¼ãƒˆ
 std::unique_ptr<DirectX::CommonStates> Obj3d::m_states;
-// ƒGƒtƒFƒNƒgƒtƒ@ƒNƒgƒŠ
+// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¯ãƒˆãƒª
 std::unique_ptr<DirectX::EffectFactory> Obj3d::m_factory;
 
 void Obj3d::InitializeStatic(Microsoft::WRL::ComPtr<ID3D11Device> d3dDevice, Microsoft::WRL::ComPtr<ID3D11DeviceContext> d3dContext, Camera * camera)
@@ -21,12 +21,12 @@ void Obj3d::InitializeStatic(Microsoft::WRL::ComPtr<ID3D11Device> d3dDevice, Mic
 	m_d3dContext = d3dContext;
 	m_Camera = camera;
 
-	// ”Ä—p•`‰æƒXƒe[ƒg¶¬
+	// æ±ç”¨æç”»ã‚¹ãƒ†ãƒ¼ãƒˆç”Ÿæˆ
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 
-	// ƒGƒtƒFƒNƒgƒtƒ@ƒNƒgƒŠ¶¬
+	// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ•ã‚¡ã‚¯ãƒˆãƒªç”Ÿæˆ
 	m_factory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
-	// ƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İƒpƒXw’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿ãƒ‘ã‚¹æŒ‡å®š
 	m_factory->SetDirectory(L"Resources");
 }
 
@@ -40,7 +40,7 @@ void Obj3d::LoadModel(const wchar_t * fileName)
 
 void Obj3d::Update()
 {
-	// å‚És—ñ‚ÌŒvZ
+	// ä¸»ã«è¡Œåˆ—ã®è¨ˆç®—
 
 }
 

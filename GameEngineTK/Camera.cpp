@@ -1,14 +1,14 @@
-#include "Camera.h"
+ï»¿#include "Camera.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 /// <summary>
-/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 /// </summary>
 Camera::Camera(int width, int height)
 {
-	// ƒƒ“ƒo•Ï”‚Ì‰Šú‰»
+	// ãƒ¡ãƒ³ãƒå¤‰æ•°ã®åˆæœŸåŒ–
 	m_eyepos = Vector3(0, 0, 5.0f);
 	m_refpos = Vector3(0, 0, 0);
 	m_upvec = Vector3(0, 1, 0);
@@ -18,9 +18,9 @@ Camera::Camera(int width, int height)
 	m_nearclip = 0.1f;
 	m_farclip = 1000.0f;
 
-	// ƒrƒ…[s—ñ‚ğ¶¬
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‚’ç”Ÿæˆ
 	m_view = Matrix::CreateLookAt(m_eyepos, m_refpos, m_upvec);
-	// Ë‰es—ñ‚Ì¶¬i“§‹“Š‰ej
+	// å°„å½±è¡Œåˆ—ã®ç”Ÿæˆï¼ˆé€è¦–æŠ•å½±ï¼‰
 	m_proj = Matrix::CreatePerspectiveFieldOfView(m_fovY, m_aspect, m_nearclip, m_farclip);
 }
 
@@ -30,9 +30,9 @@ Camera::~Camera()
 
 void Camera::Update()
 {
-	// ƒrƒ…[s—ñ‚ğ¶¬
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‚’ç”Ÿæˆ
 	m_view = Matrix::CreateLookAt(m_eyepos, m_refpos, m_upvec);
-	// Ë‰es—ñ‚Ì¶¬i“§‹“Š‰ej
+	// å°„å½±è¡Œåˆ—ã®ç”Ÿæˆï¼ˆé€è¦–æŠ•å½±ï¼‰
 	m_proj = Matrix::CreatePerspectiveFieldOfView(m_fovY, m_aspect, m_nearclip, m_farclip);
 }
 

@@ -1,5 +1,5 @@
-//--------------------------------
-//	ƒJƒƒ‰‚ğ§Œä‚·‚éƒNƒ‰ƒX
+ï»¿//--------------------------------
+//	ã‚«ãƒ¡ãƒ©ã‚’åˆ¶å¾¡ã™ã‚‹ã‚¯ãƒ©ã‚¹
 //--------------------------------
 #pragma once
 
@@ -9,60 +9,60 @@
 class Camera
 {
 public:
-	// ƒƒ“ƒoŠÖ”
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ãƒ¡ãƒ³ãƒé–¢æ•°
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Camera(int width, int height);
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~Camera();
 
-	// XV
+	// æ›´æ–°
 	virtual void Update();
 
-	// ƒrƒ…[s—ñ‚ğæ“¾
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‚’å–å¾—
 	const DirectX::SimpleMath::Matrix& GetView();
 
-	// Ë‰es—ñ‚ğæ“¾
+	// å°„å½±è¡Œåˆ—ã‚’å–å¾—
 	const DirectX::SimpleMath::Matrix& GetProj();
 
-	// ‹“_‚ğƒZƒbƒg
+	// è¦–ç‚¹ã‚’ã‚»ãƒƒãƒˆ
 	void SetEyePos(const DirectX::SimpleMath::Vector3& eyepos);
 
-	// QÆ“_‚ğƒZƒbƒg
+	// å‚ç…§ç‚¹ã‚’ã‚»ãƒƒãƒˆ
 	void SetRefPos(const DirectX::SimpleMath::Vector3& refpos);
 
-	// ã•ûŒüƒxƒNƒgƒ‹‚ğƒZƒbƒg
+	// ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’ã‚»ãƒƒãƒˆ
 	void SetUpVec(const DirectX::SimpleMath::Vector3& upvec);
 
-	// ‚’¼•ûŒü‹–ìŠp‚ğƒZƒbƒg
+	// å‚ç›´æ–¹å‘è¦–é‡è§’ã‚’ã‚»ãƒƒãƒˆ
 	void SetFovY(float fovY);
 
-	// ‚’¼•ûŒü‹–ìŠp‚ğƒZƒbƒg
+	// å‚ç›´æ–¹å‘è¦–é‡è§’ã‚’ã‚»ãƒƒãƒˆ
 	void SetAspect(float aspect);
 
-	// ‚’¼•ûŒü‹–ìŠp‚ğƒZƒbƒg
+	// å‚ç›´æ–¹å‘è¦–é‡è§’ã‚’ã‚»ãƒƒãƒˆ
 	void SetNearClip(float nearclip);
 
-	// ‚’¼•ûŒü‹–ìŠp‚ğƒZƒbƒg
+	// å‚ç›´æ–¹å‘è¦–é‡è§’ã‚’ã‚»ãƒƒãƒˆ
 	void SetFarClip(float farclip);
 
 protected:
-	// Ş—¿‚Í‚±‚±‚Éiƒƒ“ƒo•Ï”j
-	// ƒrƒ…[s—ñ
+	// ææ–™ã¯ã“ã“ã«ï¼ˆãƒ¡ãƒ³ãƒå¤‰æ•°ï¼‰
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
 	DirectX::SimpleMath::Matrix m_view;
-	// ‚Ç‚±‚©‚çŒ©‚é‚Ì‚©i‹“_j
+	// ã©ã“ã‹ã‚‰è¦‹ã‚‹ã®ã‹ï¼ˆè¦–ç‚¹ï¼‰
 	DirectX::SimpleMath::Vector3 m_eyepos;
-	// ‚Ç‚±‚ğŒ©‚é‚Ì‚©i’‹“_/QÆ“_)
+	// ã©ã“ã‚’è¦‹ã‚‹ã®ã‹ï¼ˆæ³¨è¦–ç‚¹/å‚ç…§ç‚¹)
 	DirectX::SimpleMath::Vector3 m_refpos;
-	// ‚Ç‚¿‚ç‚ª‰æ–Êã•ûŒü‚©iã•ûŒüƒxƒNƒgƒ‹j
+	// ã©ã¡ã‚‰ãŒç”»é¢ä¸Šæ–¹å‘ã‹ï¼ˆä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ï¼‰
 	DirectX::SimpleMath::Vector3 m_upvec;
-	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
+	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
 	DirectX::SimpleMath::Matrix m_proj;
-	// ‚’¼•ûŒü‹–ìŠp
+	// å‚ç›´æ–¹å‘è¦–é‡è§’
 	float m_fovY;
-	// ƒAƒXƒyƒNƒg”äi‰¡Ec‚Ì”ä—¦j
+	// ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ï¼ˆæ¨ªãƒ»ç¸¦ã®æ¯”ç‡ï¼‰
 	float m_aspect;
-	// è‘O‚Ì•\¦ŒÀŠE‹——£
+	// æ‰‹å‰ã®è¡¨ç¤ºé™ç•Œè·é›¢
 	float m_nearclip;
-	// ‰œ‚Ì•\¦ŒÀŠE‹——£
+	// å¥¥ã®è¡¨ç¤ºé™ç•Œè·é›¢
 	float m_farclip;
 };
