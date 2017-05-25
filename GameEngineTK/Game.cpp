@@ -87,11 +87,8 @@ void Game::Initialize(HWND window, int width, int height)
 	// テクスチャの読み込みパス指定
 	m_factory->SetDirectory(L"Resources");
 	// 天球モデルの読み込み
-	m_modelSkydome = Model::CreateFromCMO(
-		m_d3dDevice.Get(),
-		L"Resources/skydome.cmo",
-		*m_factory
-	);
+	m_objSkydome.LoadModel(L"Resources/skydome.cmo");
+	
 	// モデルの読み込み
 	m_modelGround = Model::CreateFromCMO(
 		m_d3dDevice.Get(),
@@ -116,7 +113,13 @@ void Game::Initialize(HWND window, int width, int height)
 
 	tank_angle = 0.0f;
 
-	
+	// 自機パーツの読み込み
+	m_ObjPlayer.resize(PLAYER_PARTS_NUM);
+	m_ObjPlayer[PLAYER_PARTS_BODY].LoadModel(L"Resources/body.cmo");
+	m_ObjPlayer[PLAYER_PARTS_COCKPIT].LoadModel(L"Resources/cockpit.cmo");
+	m_ObjPlayer[PLAYER_PARTS_LAUNCHER].LoadModel(L"Resources/launcher.cmo");
+	m_ObjPlayer[PLAYER_PARTS_SHIELD].LoadModel(L"Resources/shield.cmo");
+	m_ObjPlayer[PLAYER_PARTS_DRILL].LoadModel(L"Resources/drill.cmo");
 }
 
 // Executes the basic game loop.
@@ -151,6 +154,8 @@ void Game::Update(DX::StepTimer const& timer)
 		m_view = m_Camera->GetView();
 		m_proj = m_Camera->GetProj();
 	}
+
+	m_objSkydome.Update();
 
 	//// どこから見るのか（視点）
 	//Vector3 eyepos(0, 0, 5.0f);
@@ -268,6 +273,13 @@ void Game::Update(DX::StepTimer const& timer)
 	//	// ワールド行列を合成
 	//	tank_world2 = rotmat2 * transmat2 * tank_world;
 	//}
+
+	for (std::vector<Obj3d>::iterator it = m_ObjPlayer.begin();
+		it != m_ObjPlayer.end();
+		it++)
+	{
+		it->Update();
+	}
 }
 
 // Draws the scene.
@@ -311,12 +323,7 @@ void Game::Render()
 	m_d3dContext->IASetInputLayout(m_inputLayout.Get());
 
 	// 天球モデルの描画
-	m_modelSkydome->Draw(m_d3dContext.Get(),
-		m_states,
-		Matrix::Identity,
-		m_view,
-		m_proj
-	);
+	m_objSkydome.Draw();
 	// 地面モデルの描画
 	m_modelGround->Draw(m_d3dContext.Get(),
 		m_states,
@@ -348,8 +355,13 @@ void Game::Render()
 	//	m_view,
 	//	m_proj
 	//);
-	m_ObjPlayer1.Draw();
-	m_ObjPlayer2.Draw();
+	
+	for (std::vector<Obj3d>::iterator it = m_ObjPlayer.begin();
+		it != m_ObjPlayer.end();
+		it++)
+	{
+		it->Draw();
+	}
 
 	m_batch->Begin();
 	VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);
