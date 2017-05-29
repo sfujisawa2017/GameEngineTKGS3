@@ -119,6 +119,8 @@ private:
 	//DirectX::SimpleMath::Matrix tank_world2;
 	// 自機の３Ｄオブジェクト
 	std::vector<Obj3d> m_ObjPlayer;
+	// サイン用の引数となる角度
+	float m_sinAngle;
 	// カメラ
 	std::unique_ptr<FollowCamera> m_Camera;
 
