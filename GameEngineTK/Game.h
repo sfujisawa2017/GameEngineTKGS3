@@ -23,17 +23,7 @@ class Game
 {
 public:
 
-	// 自機パーツ
-	enum PLAYER_PARTS
-	{
-		PLAYER_PARTS_BODY,
-		PLAYER_PARTS_COCKPIT,
-		PLAYER_PARTS_LAUNCHER,
-		PLAYER_PARTS_SHIELD,
-		PLAYER_PARTS_DRILL,
-
-		PLAYER_PARTS_NUM
-	};
+	
 
     Game();
 
@@ -109,18 +99,7 @@ private:
 	float m_AngleBall;
 	// キーボード
 	std::unique_ptr<DirectX::Keyboard> keyboard;
-	// 自機の座標
-	DirectX::SimpleMath::Vector3 tank_pos;
-	// 自機の回転角
-	float tank_angle;
-	//// 自機のワールド行列1
-	//DirectX::SimpleMath::Matrix tank_world;
-	//// 自機のワールド行列2
-	//DirectX::SimpleMath::Matrix tank_world2;
-	// 自機の３Ｄオブジェクト
-	std::vector<Obj3d> m_ObjPlayer;
-	// サイン用の引数となる角度
-	float m_sinAngle;
+		
 	// カメラ
 	std::unique_ptr<FollowCamera> m_Camera;
 

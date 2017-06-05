@@ -38,6 +38,16 @@ Obj3d::Obj3d()
 	m_parent = nullptr;
 }
 
+//Obj3d::~Obj3d()
+//{
+//}
+//
+//Obj3d::Obj3d(const Obj3d & o)
+//{
+//
+//
+//}
+
 void Obj3d::LoadModel(const wchar_t * fileName)
 {
 	// モデルの読み込み

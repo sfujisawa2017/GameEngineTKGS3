@@ -109,51 +109,10 @@ void Game::Initialize(HWND window, int width, int height)
 	//);
 
 	m_AngleBall = 0.0f;
+
 	
 
-	tank_angle = 0.0f;
-
-	// 自機パーツの読み込み
-	m_ObjPlayer.resize(PLAYER_PARTS_NUM);
-	m_ObjPlayer[PLAYER_PARTS_BODY].LoadModel(L"Resources/body.cmo");
-	m_ObjPlayer[PLAYER_PARTS_COCKPIT].LoadModel(L"Resources/cockpit.cmo");
-	m_ObjPlayer[PLAYER_PARTS_LAUNCHER].LoadModel(L"Resources/launcher.cmo");
-	m_ObjPlayer[PLAYER_PARTS_SHIELD].LoadModel(L"Resources/shield.cmo");
-	m_ObjPlayer[PLAYER_PARTS_DRILL].LoadModel(L"Resources/drill.cmo");
-
-	// パーツの親子関係をセット
-	m_ObjPlayer[PLAYER_PARTS_COCKPIT].SetParent(
-		&m_ObjPlayer[PLAYER_PARTS_BODY]);
-
-	m_ObjPlayer[PLAYER_PARTS_DRILL].SetParent(
-		&m_ObjPlayer[PLAYER_PARTS_COCKPIT]);
-
-	m_ObjPlayer[PLAYER_PARTS_LAUNCHER].SetParent(
-		&m_ObjPlayer[PLAYER_PARTS_BODY]);
-
-	m_ObjPlayer[PLAYER_PARTS_SHIELD].SetParent(
-		&m_ObjPlayer[PLAYER_PARTS_BODY]);
-
-	// 親からのオフセット（座標のずらし分）をセット
-	m_ObjPlayer[PLAYER_PARTS_COCKPIT].SetTranslation(
-		Vector3(0, 0.37f, -0.4f));
-	m_ObjPlayer[PLAYER_PARTS_COCKPIT].SetRotation(
-		Vector3(0, XM_PI, 0));
-
-	m_ObjPlayer[PLAYER_PARTS_DRILL].SetTranslation(
-		Vector3(0, 0.1f, 0.8f));
-
-	m_ObjPlayer[PLAYER_PARTS_LAUNCHER].SetTranslation(
-		Vector3(0, 0.37f, 0.4f));
-
-	m_ObjPlayer[PLAYER_PARTS_SHIELD].SetTranslation(
-		Vector3(-0.8f, 0.37f, 0));
-	m_ObjPlayer[PLAYER_PARTS_SHIELD].SetScale(
-		Vector3(2,2,2));
-	m_ObjPlayer[PLAYER_PARTS_SHIELD].SetRotation(
-		Vector3(0, 0, XM_PIDIV2));
-
-	m_sinAngle = 0.0f;
+	
 }
 
 // Executes the basic game loop.
@@ -252,81 +211,12 @@ void Game::Update(DX::StepTimer const& timer)
 		m_worldBall[i+10] = transmat * rotmat;
 	}
 
-	// 自機パーツのギミック
-	{
-		m_sinAngle += 0.1f;
-
-		Vector3 angle;
-		angle = m_ObjPlayer[PLAYER_PARTS_DRILL].GetRotation();
-
-		m_ObjPlayer[PLAYER_PARTS_DRILL].SetRotation(
-			Vector3(0, 0, sinf(m_sinAngle)*10.0f));
-
-		Vector3 pos;
-
-		//pos = m_ObjPlayer[PLAYER_PARTS_DRILL].GetTranslation();
-		//m_ObjPlayer[PLAYER_PARTS_DRILL].SetTranslation(
-		//	pos += Vector3(0, 0, 0.03f));
-
-		
-		//m_ObjPlayer[PLAYER_PARTS_SHIELD].SetTranslation(
-		//	Vector3(-0.8f, 0.37f, 0)+
-		//	Vector3(0, 0, sinf(m_sinAngle)));
-
-		m_ObjPlayer[PLAYER_PARTS_SHIELD].SetTranslation(
-			Vector3(-0.8f, 0.37f, 0) +
-			Vector3(cosf(m_sinAngle)*10.0f, 0, sinf(m_sinAngle)*5.0f));
-	}
+	
 
 	// キーボードの状態取得
 	Keyboard::State g_key = keyboard->GetState();
 
-	// Aキーが押されていたら
-	if (g_key.A)
-	{
-		// 自機の角度を回転させる
-		//tank_angle += 0.03f;
-		float angle = m_ObjPlayer[0].GetRotation().y;
-		m_ObjPlayer[0].SetRotation(Vector3(0, angle+0.03f, 0));
-	}
-
-	// Dキーが押されていたら
-	if (g_key.D)
-	{
-		// 自機の角度を回転させる
-		float angle = m_ObjPlayer[0].GetRotation().y;
-		m_ObjPlayer[0].SetRotation(Vector3(0, angle - 0.03f, 0));
-	}
-
-	// Wキーが押されていたら
-	if (g_key.W)
-	{
-		// 移動量のベクトル
-		Vector3 moveV(0, 0, -0.1f);
-		// 移動量ベクトルを自機の角度分回転させる
-		//moveV = Vector3::TransformNormal(moveV, tank_world);
-		float angle = m_ObjPlayer[0].GetRotation().y;
-		Matrix rotmat = Matrix::CreateRotationY(angle);
-		moveV = Vector3::TransformNormal(moveV, rotmat);
-		// 自機の座標を移動させる
-		Vector3 pos = m_ObjPlayer[0].GetTranslation();
-		m_ObjPlayer[0].SetTranslation(pos + moveV);
-	}
-
-	// Sキーが押されていたら
-	if (g_key.S)
-	{
-		// 移動量のベクトル
-		Vector3 moveV(0, 0, +0.1f);
-		// 移動量ベクトルを自機の角度分回転させる
-		//moveV = Vector3::TransformNormal(moveV, tank_world);
-		float angle = m_ObjPlayer[0].GetRotation().y;
-		Matrix rotmat = Matrix::CreateRotationY(angle);
-		moveV = Vector3::TransformNormal(moveV, rotmat);
-		// 自機の座標を移動させる
-		Vector3 pos = m_ObjPlayer[0].GetTranslation();
-		m_ObjPlayer[0].SetTranslation(pos + moveV);
-	}
+	
 
 	//{// 自機のワールド行列を計算
 	//	// パーツ１（親）
@@ -342,12 +232,7 @@ void Game::Update(DX::StepTimer const& timer)
 	//	tank_world2 = rotmat2 * transmat2 * tank_world;
 	//}
 
-	for (std::vector<Obj3d>::iterator it = m_ObjPlayer.begin();
-		it != m_ObjPlayer.end();
-		it++)
-	{
-		it->Update();
-	}
+	
 }
 
 // Draws the scene.
@@ -424,12 +309,7 @@ void Game::Render()
 	//	m_proj
 	//);
 	
-	for (std::vector<Obj3d>::iterator it = m_ObjPlayer.begin();
-		it != m_ObjPlayer.end();
-		it++)
-	{
-		it->Draw();
-	}
+	
 
 	m_batch->Begin();
 	VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);

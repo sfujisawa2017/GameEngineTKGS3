@@ -38,6 +38,11 @@ public:
 	// コンストラクタ
 	Obj3d();
 
+	//~Obj3d();
+
+	//Obj3d(const Obj3d &o);  // コピーコンストラクタ
+
+
 	// モデルをロード
 	void LoadModel(const wchar_t* fileName);
 
