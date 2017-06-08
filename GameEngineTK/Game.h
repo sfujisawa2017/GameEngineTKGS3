@@ -16,6 +16,8 @@
 #include "DebugCamera.h"
 #include "FollowCamera.h"
 #include "Obj3d.h"
+#include "Player.h"
+#include "Enemy.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -103,5 +105,9 @@ private:
 	// カメラ
 	std::unique_ptr<FollowCamera> m_Camera;
 
+	// プレイヤー
+	std::unique_ptr<Player> m_Player;
 
+	// 敵
+	std::vector<std::unique_ptr<Enemy>> m_Enemies;
 };

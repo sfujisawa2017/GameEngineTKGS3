@@ -1,16 +1,16 @@
 //--------------------------------------------------------------------------------------
-// ファイル名: Player.cpp
+// ファイル名: Enemy.cpp
 // 作成者:
 // 作成日:
 // 説明:
 //--------------------------------------------------------------------------------------
 
-#include "Player.h"
+#include "Enemy.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-Player::Player(DirectX::Keyboard* keyboard)
+Enemy::Enemy(DirectX::Keyboard* keyboard)
 {
 	m_pKeyboard = keyboard;
 
@@ -19,14 +19,14 @@ Player::Player(DirectX::Keyboard* keyboard)
 	Initialize();
 }
 
-Player::~Player()
+Enemy::~Enemy()
 {
 }
 
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-void Player::Initialize()
+void Enemy::Initialize()
 {
 	// 自機パーツの読み込み
 	m_Obj.resize(PARTS_NUM);
@@ -67,16 +67,26 @@ void Player::Initialize()
 		Vector3(2, 2, 2));
 	m_Obj[PARTS_SHIELD].SetRotation(
 		Vector3(0, 0, XM_PIDIV2));
+
+	// 初期配置
+	Vector3 pos;
+	pos.x = rand() % 10;
+	pos.z = rand() % 10;
+
+	this->SetTrans(pos);
+
+	m_Timer = 0;
+	m_DistAngle = 0;
 }
 
 //-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
-void Player::Update()
+void Enemy::Update()
 {
-	// キーボードの更新
-	Keyboard::State keystate = m_pKeyboard->GetState();
-	m_KeyboardTracker.Update(keystate);
+	//// キーボードの更新
+	//Keyboard::State keystate = m_pKeyboard->GetState();
+	//m_KeyboardTracker.Update(keystate);
 
 	// 自機パーツのギミック
 	//{
@@ -104,42 +114,46 @@ void Player::Update()
 	//		Vector3(cosf(m_sinAngle)*10.0f, 0, sinf(m_sinAngle)*5.0f));
 	//}
 
-	// Aキーが押されていたら
-	if (keystate.A)
+	m_Timer--;
+	if (m_Timer < 0)
 	{
-		// 自機の角度を回転させる
-		float angle = m_Obj[0].GetRotation().y;
-		m_Obj[0].SetRotation(Vector3(0, angle + 0.03f, 0));
+		m_Timer = 60;
+		// -0.5～+0.5の乱数
+		float rnd = (float)rand() / RAND_MAX - 0.5f;
+		rnd *= 180.0f;
+
+		rnd = XMConvertToRadians(rnd);
+
+		m_DistAngle += rnd;
 	}
 
-	// Dキーが押されていたら
-	if (keystate.D)
 	{
 		// 自機の角度を回転させる
-		float angle = m_Obj[0].GetRotation().y;
-		m_Obj[0].SetRotation(Vector3(0, angle - 0.03f, 0));
+		Vector3 rotv = m_Obj[0].GetRotation();
+		
+		float angle = m_DistAngle - rotv.y;
+
+		// 180度を超えていた場合、逆回りの方が近い
+		if (angle > XM_PI)
+		{
+			angle -= XM_2PI;
+		}
+
+		if (angle < -XM_PI)
+		{
+			angle += XM_2PI;
+		}
+
+		// 補間
+		rotv.y += angle * 0.05f;
+
+		SetRot(rotv);
 	}
 
-	// Wキーが押されていたら
-	if (keystate.W)
+	// 機体が向いている方向に進む
 	{
 		// 移動量のベクトル
 		Vector3 moveV(0, 0, -0.1f);
-		// 移動量ベクトルを自機の角度分回転させる
-		//moveV = Vector3::TransformNormal(moveV, tank_world);
-		float angle = m_Obj[0].GetRotation().y;
-		Matrix rotmat = Matrix::CreateRotationY(angle);
-		moveV = Vector3::TransformNormal(moveV, rotmat);
-		// 自機の座標を移動させる
-		Vector3 pos = m_Obj[0].GetTranslation();
-		m_Obj[0].SetTranslation(pos + moveV);
-	}
-
-	// Sキーが押されていたら
-	if (keystate.S)
-	{
-		// 移動量のベクトル
-		Vector3 moveV(0, 0, +0.1f);
 		// 移動量ベクトルを自機の角度分回転させる
 		//moveV = Vector3::TransformNormal(moveV, tank_world);
 		float angle = m_Obj[0].GetRotation().y;
@@ -156,7 +170,7 @@ void Player::Update()
 //-----------------------------------------------------------------------------
 // 行列更新
 //-----------------------------------------------------------------------------
-void Player::Calc()
+void Enemy::Calc()
 {
 	for (std::vector<Obj3d>::iterator it = m_Obj.begin();
 		it != m_Obj.end();
@@ -169,7 +183,7 @@ void Player::Calc()
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void Player::Draw()
+void Enemy::Draw()
 {
 	for (std::vector<Obj3d>::iterator it = m_Obj.begin();
 		it != m_Obj.end();
@@ -179,31 +193,31 @@ void Player::Draw()
 	}
 }
 
-const DirectX::SimpleMath::Vector3& Player::GetTrans()
+const DirectX::SimpleMath::Vector3& Enemy::GetTrans()
 {
 	// タンクパーツの座標を返す
 	return m_Obj[0].GetTranslation();
 }
 
-const DirectX::SimpleMath::Vector3 & Player::GetRot()
+const DirectX::SimpleMath::Vector3 & Enemy::GetRot()
 {
 	// タンクパーツの回転を返す
 	return m_Obj[0].GetRotation();
 }
 
-void Player::SetTrans(const DirectX::SimpleMath::Vector3& trans)
+void Enemy::SetTrans(const DirectX::SimpleMath::Vector3& trans)
 {
 	// タンクパーツの座標を設定
 	m_Obj[0].SetTranslation(trans);
 }
 
-void Player::SetRot(const DirectX::SimpleMath::Vector3& rot)
+void Enemy::SetRot(const DirectX::SimpleMath::Vector3& rot)
 {
 	// タンクパーツの座標を設定
 	m_Obj[0].SetRotation(rot);
 }
 
-const DirectX::SimpleMath::Matrix& Player::GetLocalWorld()
+const DirectX::SimpleMath::Matrix& Enemy::GetLocalWorld()
 {
 	// タンクパーツのワールド行列を返す
 	return m_Obj[0].GetWorld();

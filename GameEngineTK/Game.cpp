@@ -39,17 +39,35 @@ void Game::Initialize(HWND window, int width, int height)
     */
 
 	// 初期化はここに書く
-	// キーボードの初期化
-	keyboard = std::make_unique<Keyboard>();
-
 	// カメラの生成
 	m_Camera = std::make_unique<FollowCamera>(
 		m_outputWidth, m_outputHeight);
-	// カメラにキーボードをセット
-	m_Camera->SetKeyboard(keyboard.get());
+
 	// ３Ｄオブジェクトの静的メンバを初期化
 	Obj3d::InitializeStatic(m_d3dDevice, m_d3dContext, m_Camera.get());
 
+	// キーボードの初期化
+	keyboard = std::make_unique<Keyboard>();
+
+	// プレイヤーの生成
+	m_Player = std::make_unique<Player>(keyboard.get());
+	m_Player->Initialize();
+
+	// 敵の生成
+	int enemyNum = rand() % 10 + 1;
+	m_Enemies.resize(enemyNum);
+	for (int i = 0; i < enemyNum; i++)
+	{
+		m_Enemies[i] = std::make_unique<Enemy>(keyboard.get());
+
+		m_Enemies[i]->Initialize();
+	}
+
+	// カメラにキーボードをセット
+	m_Camera->SetKeyboard(keyboard.get());
+	// カメラにプレイヤーをセット
+	m_Camera->SetPlayer(m_Player.get());
+	
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionNormal>>(m_d3dContext.Get());
 
 
@@ -138,10 +156,22 @@ void Game::Update(DX::StepTimer const& timer)
 	// ビュー行列を取得
 	//m_view = m_debugCamera->GetCameraMatrix();
 
-	{// 自機に追従するカメラ
-		m_Camera->SetTargetPos(tank_pos);
-		m_Camera->SetTargetAngle(tank_angle);
+	m_Player->Update();
 
+	for (std::vector<std::unique_ptr<Enemy>>::iterator it = m_Enemies.begin();
+		it != m_Enemies.end();
+		it++)
+	{
+		// デバッグしやすい
+		//Enemy* enemy = it->get();
+
+		//enemy->Update();
+
+		// 短い
+		(*it)->Update();
+	}
+
+	{// 自機に追従するカメラ
 		// カメラの更新
 		m_Camera->Update();
 		m_view = m_Camera->GetView();
@@ -284,32 +314,15 @@ void Game::Render()
 		m_view,
 		m_proj
 	);
-	// 球モデルの描画
-	for (int i = 0; i < 20; i++)
+
+	m_Player->Draw();	
+
+	for (std::vector<std::unique_ptr<Enemy>>::iterator it = m_Enemies.begin();
+		it != m_Enemies.end();
+		it++)
 	{
-		m_modelBall->Draw(m_d3dContext.Get(),
-			m_states,
-			m_worldBall[i],
-			m_view,
-			m_proj
-		);
+		(*it)->Draw();
 	}
-	//// 頭部モデルの描画1
-	//m_modelHead->Draw(m_d3dContext.Get(),
-	//	m_states,
-	//	tank_world,
-	//	m_view,
-	//	m_proj
-	//);
-	//// 頭部モデルの描画2
-	//m_modelHead->Draw(m_d3dContext.Get(),
-	//	m_states,
-	//	tank_world2,
-	//	m_view,
-	//	m_proj
-	//);
-	
-	
 
 	m_batch->Begin();
 	VertexPositionColor v1(Vector3(0.f, 0.5f, 0.5f), Colors::Yellow);

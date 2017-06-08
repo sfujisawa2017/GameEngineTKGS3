@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include <Keyboard.h>
+#include "Player.h"
 
 class FollowCamera : public Camera
 {
@@ -25,6 +26,9 @@ public:
 	// キーボードをセット
 	void SetKeyboard(DirectX::Keyboard* keyboard);
 
+	// プレイヤーをセット
+	void SetPlayer(Player* player) { m_player = player; }
+
 protected:
 	// 追従対象の座標
 	DirectX::SimpleMath::Vector3 m_targetPos;
@@ -36,4 +40,6 @@ protected:
 	DirectX::Keyboard::KeyboardStateTracker m_keyboardTracker;
 	// FPSカメラフラグ
 	bool m_isFPS;
+	// プレイヤー
+	Player* m_player;
 };
