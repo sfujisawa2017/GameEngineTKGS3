@@ -67,6 +67,9 @@ void Player::Initialize()
 		Vector3(2, 2, 2));
 	m_Obj[PARTS_SHIELD].SetRotation(
 		Vector3(0, 0, XM_PIDIV2));
+
+	// 最初は発射状態ではない
+	m_FireFlag = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -150,7 +153,24 @@ void Player::Update()
 		m_Obj[0].SetTranslation(pos + moveV);
 	}
 
+	// スペースキーを押した
+	if (m_KeyboardTracker.IsKeyPressed(Keyboard::Keys::Space))
+	{
+		// 弾丸発射中なら
+		if (m_FireFlag)
+		{
+			// リセット
+			ResetBullet();
+		}
+		else
+		{
+			// 発射
+			FireBullet();
+		}
+	}
+
 	// 弾丸を前進させる
+	if ( m_FireFlag)
 	{
 		// 自機の座標を移動させる
 		Vector3 pos = m_Obj[PARTS_DRILL].GetTranslation();
@@ -159,7 +179,7 @@ void Player::Update()
 	
 	Calc();
 
-	FireBullet();
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -190,6 +210,8 @@ void Player::Draw()
 
 void Player::FireBullet()
 {
+	m_FireFlag = false;
+
 	// 発射するパーツのワールド行列を取得
 	Matrix worldm = m_Obj[PARTS_DRILL].GetWorld();
 
@@ -207,12 +229,25 @@ void Player::FireBullet()
 	m_Obj[PARTS_DRILL].SetTranslation(translation);
 
 	// 弾丸の速度を設定
-	m_BulletVel = Vector3(0, 0, -0.1f);
+	m_BulletVel = Vector3(0, 0, 0.1f);
 	m_BulletVel = Vector3::Transform(m_BulletVel, rotation);
+
+	m_FireFlag = true;
 }
 
 void Player::ResetBullet()
 {
+	if (!m_FireFlag) return;
+
+	// 親子関係とオフセットを初期値に戻す
+	m_Obj[PARTS_DRILL].SetParent(
+		&m_Obj[PARTS_COCKPIT]);
+
+	m_Obj[PARTS_DRILL].SetScale(Vector3(1,1,1));
+	m_Obj[PARTS_DRILL].SetRotation(Vector3(0,0,0));
+	m_Obj[PARTS_DRILL].SetTranslation(Vector3(0, 0.1f, 0.8f));
+
+	m_FireFlag = false;
 }
 
 const DirectX::SimpleMath::Vector3& Player::GetTrans()

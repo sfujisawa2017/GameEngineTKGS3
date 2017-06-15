@@ -74,5 +74,7 @@ protected:
 
 	// 弾丸の速度ベクトル
 	DirectX::SimpleMath::Vector3 m_BulletVel;
+	// 弾丸発射中フラグ
+	bool m_FireFlag;
 };
 
