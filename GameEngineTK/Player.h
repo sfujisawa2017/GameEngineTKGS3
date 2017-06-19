@@ -14,7 +14,7 @@
 #include <Keyboard.h>
 #include <vector>
 #include "Obj3D.h"
-
+#include "CollisionNode.h"
 
 // 自機
 class Player
@@ -60,6 +60,8 @@ public:
 	void SetRot(const DirectX::SimpleMath::Vector3& rot);
 	// ワールド行列を取得
 	const DirectX::SimpleMath::Matrix& GetLocalWorld();
+	// 弾丸用当たり判定を取得
+	const SphereNode& GetCollisionNodeBullet() { return m_CollisionNodeBullet; }
 
 protected:
 	// メンバ変数
@@ -76,5 +78,8 @@ protected:
 	DirectX::SimpleMath::Vector3 m_BulletVel;
 	// 弾丸発射中フラグ
 	bool m_FireFlag;
+
+	// 弾丸用の当たり判定
+	SphereNode m_CollisionNodeBullet;
 };
 
