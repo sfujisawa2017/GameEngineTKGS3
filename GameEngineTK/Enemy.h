@@ -12,7 +12,7 @@
 #include <Keyboard.h>
 #include <vector>
 #include "Obj3D.h"
-
+#include "CollisionNode.h"
 
 // 自機
 class Enemy
@@ -54,6 +54,9 @@ public:
 	// ワールド行列を取得
 	const DirectX::SimpleMath::Matrix& GetLocalWorld();
 
+	// 全身用当たり判定を取得
+	const SphereNode& GetCollisionNodeBody() { return m_CollisionNodeBody; }
+
 protected:
 	// メンバ変数
 	// ロボットの構成パーツ
@@ -69,5 +72,8 @@ protected:
 	int m_Timer;
 	// 目標の角度
 	float m_DistAngle;
+	
+	// 全身用の当たり判定
+	SphereNode m_CollisionNodeBody;
 };
 

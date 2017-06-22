@@ -77,6 +77,14 @@ void Enemy::Initialize()
 
 	m_Timer = 0;
 	m_DistAngle = 0;
+
+	{// 全身用の当たり判定を設定
+		m_CollisionNodeBody.Initialize();
+		// 親パーツを指定
+		m_CollisionNodeBody.SetParent(&m_Obj[0]);
+		m_CollisionNodeBody.SetTrans(Vector3(0, 0.5f, 0));
+		m_CollisionNodeBody.SetLocalRadius(1.0f);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -178,6 +186,9 @@ void Enemy::Calc()
 	{
 		it->Update();
 	}
+
+	// 当たり判定の更新
+	m_CollisionNodeBody.Update();
 }
 
 //-----------------------------------------------------------------------------
@@ -191,6 +202,8 @@ void Enemy::Draw()
 	{
 		it->Draw();
 	}
+
+	m_CollisionNodeBody.Draw();
 }
 
 const DirectX::SimpleMath::Vector3& Enemy::GetTrans()
