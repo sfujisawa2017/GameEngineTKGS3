@@ -32,3 +32,21 @@ bool CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB)
 
 	return true;
 }
+
+/// <summary>
+/// 三点の座標から三角形を計算（反時計回りに頂点を指定）
+/// </summary>
+/// <param name="_p0">点０</param>
+/// <param name="_p1">点１</param>
+/// <param name="_p2">点２</param>
+/// <param name="_triangle">三角形（結果出力用）</param>
+void ComputeTriangle(const Vector3& _p0, const Vector3& _p1, const Vector3& _p2, Triangle* _triangle)
+{
+	// 座標をコピー
+	_triangle->P0 = _p0;
+	_triangle->P1 = _p1;
+	_triangle->P2 = _p2;
+
+	// 法線ベクトルを計算
+	//Vector3 
+}
