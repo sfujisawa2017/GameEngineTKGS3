@@ -11,6 +11,14 @@
 /// </summary>
 class CollisionNode
 {
+protected:
+	// デバッグ表示ＯＮ
+	static bool m_DebugVisible;
+
+public:
+	static void GetDebugVisible(bool flag) { m_DebugVisible = flag; }
+	static bool GetDebugVisible() { return m_DebugVisible; }
+
 public:
 	// 初期化
 	virtual void Initialize() = 0;
