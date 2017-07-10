@@ -78,6 +78,13 @@ void Player::Initialize()
 		m_CollisionNodeBullet.SetTrans(Vector3(0, 0, 0));
 		m_CollisionNodeBullet.SetLocalRadius(0.5f);
 	}
+	{// 全身用の当たり判定を設定
+		m_CollisionNodeBody.Initialize();
+		// 親パーツを指定
+		m_CollisionNodeBody.SetParent(&m_Obj[0]);
+		m_CollisionNodeBody.SetTrans(Vector3(0, 0.5f, 0));
+		m_CollisionNodeBody.SetLocalRadius(1.0f);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -204,6 +211,8 @@ void Player::Calc()
 
 	// 当たり判定の更新
 	m_CollisionNodeBullet.Update();
+	// 当たり判定の更新
+	m_CollisionNodeBody.Update();
 }
 
 //-----------------------------------------------------------------------------
@@ -219,6 +228,7 @@ void Player::Draw()
 	}
 
 	m_CollisionNodeBullet.Draw();
+	m_CollisionNodeBody.Draw();
 }
 
 void Player::FireBullet()

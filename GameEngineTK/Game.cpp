@@ -220,6 +220,52 @@ void Game::Update(DX::StepTimer const& timer)
 
 	m_landshape.Update();
 
+	{// 自機の地形へのめり込みを排斥する
+		// 自機の当たり判定球を取得
+		Sphere sphere = m_Player->GetCollisionNodeBody();
+		// 自機のワールド座標を取得
+		Vector3 trans = m_Player->GetTrans();
+		// 球の中心から自機センターへのベクトル
+		Vector3 sphere2player = trans - sphere.Center;
+
+		// めり込み排斥ベクトル
+		Vector3 reject;
+		// 地形と球の当たり判定
+		if (m_landshape.IntersectSphere(sphere, &reject))
+		{
+			// めり込みを解消するように移動
+			sphere.Center += reject;
+		}
+
+		// 自機を移動
+		m_Player->SetTrans(sphere.Center + sphere2player);
+
+		m_Player->Calc();
+	}
+
+	{// 自機が地面に立つ処理
+		// 自機の頭から足元への線分
+		Segment player_segment;
+		// 自機のワールド座標を取得
+		Vector3 trans = m_Player->GetTrans();
+		player_segment.Start = trans + Vector3(0, 1, 0);
+		player_segment.End = trans + Vector3(0, -0.5f,0);
+
+		// 交点座標
+		Vector3 inter;
+		// 地形と線分の当たり判定（レイキャスティングLayCasting）
+		if (m_landshape.IntersectSegment(player_segment, &inter))
+		{
+			// Ｙ座標のみ交点の位置に移動
+			trans.y = inter.y;
+		}
+
+		// 自機を移動
+		m_Player->SetTrans(trans);
+
+		m_Player->Calc();
+	}
+
 	//// どこから見るのか（視点）
 	//Vector3 eyepos(0, 0, 5.0f);
 	//// どこを見るのか（注視点/参照点)
