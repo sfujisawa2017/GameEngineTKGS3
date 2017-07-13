@@ -83,8 +83,10 @@ void Player::Initialize()
 		// 親パーツを指定
 		m_CollisionNodeBody.SetParent(&m_Obj[0]);
 		m_CollisionNodeBody.SetTrans(Vector3(0, 0.5f, 0));
-		m_CollisionNodeBody.SetLocalRadius(1.0f);
+		m_CollisionNodeBody.SetLocalRadius(0.5f);
 	}
+
+	m_isJump = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -95,6 +97,27 @@ void Player::Update()
 	// キーボードの更新
 	Keyboard::State keystate = m_pKeyboard->GetState();
 	m_KeyboardTracker.Update(keystate);
+
+	if (m_KeyboardTracker.IsKeyPressed(Keyboard::Keys::Space))
+	{
+		//ジャンプ開始
+		StartJump();
+	}
+
+	// ジャンプ中
+	if (m_isJump)
+	{
+		m_Velocity.y -= GRAVITY_ACC;
+		// 速度制限
+		if (m_Velocity.y <= -JUMP_SPEED_MAX)
+		{
+			m_Velocity.y = -JUMP_SPEED_MAX;
+		}
+	}
+
+	Vector3 trans = this->GetTrans();
+	trans += m_Velocity;
+	this->SetTrans(trans);
 
 	// 自機パーツのギミック
 	//{
@@ -301,4 +324,41 @@ const DirectX::SimpleMath::Matrix& Player::GetLocalWorld()
 {
 	// タンクパーツのワールド行列を返す
 	return m_Obj[0].GetWorld();
+}
+
+/// <summary>
+/// ジャンプ開始
+/// </summary>
+void Player::StartJump()
+{
+	// ジャンプ中でないか
+	if (!m_isJump)
+	{
+		// 上方向の初速を設定
+		m_Velocity.y = JUMP_SPEED_FIRST;
+		m_isJump = true;
+	}
+}
+
+/// <summary>
+/// 落下開始
+/// </summary>
+void Player::StartFall()
+{
+	// ジャンプ中でないか
+	if (!m_isJump)
+	{
+		// 上方向の初速を設定
+		m_Velocity.y = 0.0f;
+		m_isJump = true;
+	}
+}
+
+/// <summary>
+/// ジャンプを終了する
+/// </summary>
+void Player::StopJump()
+{
+	m_isJump = false;
+	m_Velocity = Vector3::Zero;
 }

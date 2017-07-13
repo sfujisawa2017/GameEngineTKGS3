@@ -115,7 +115,8 @@ void Game::Initialize(HWND window, int width, int height)
 	m_objSkydome.LoadModel(L"Resources/skydome.cmo");
 
 	// 地形データの読み込み landshapeファイル名、cmoファイル名
-	m_landshape.Initialize(L"ball", L"");
+	m_landshape.Initialize(L"ground200m", L"ground200m");
+	//m_landshape.SetRot(Vector3(0.9f, 0, 0));
 	
 	//// モデルの読み込み
 	//m_modelGround = Model::CreateFromCMO(
@@ -244,26 +245,37 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	{// 自機が地面に立つ処理
-		// 自機の頭から足元への線分
-		Segment player_segment;
-		// 自機のワールド座標を取得
-		Vector3 trans = m_Player->GetTrans();
-		player_segment.Start = trans + Vector3(0, 1, 0);
-		player_segment.End = trans + Vector3(0, -0.5f,0);
-
-		// 交点座標
-		Vector3 inter;
-		// 地形と線分の当たり判定（レイキャスティングLayCasting）
-		if (m_landshape.IntersectSegment(player_segment, &inter))
+		if (m_Player->GetVelocity().y <= 0.0f)
 		{
-			// Ｙ座標のみ交点の位置に移動
-			trans.y = inter.y;
+			// 自機の頭から足元への線分
+			Segment player_segment;
+			// 自機のワールド座標を取得
+			Vector3 trans = m_Player->GetTrans();
+			player_segment.Start = trans + Vector3(0, 1, 0);
+			// 足元よりやや下まで吸着
+			player_segment.End = trans + Vector3(0, -0.5f, 0);
+
+			// 交点座標
+			Vector3 inter;
+			// 地形と線分の当たり判定（レイキャスティングLayCasting）
+			if (m_landshape.IntersectSegment(player_segment, &inter))
+			{
+				// Ｙ座標のみ交点の位置に移動
+				trans.y = inter.y;
+				// 落下終了
+				m_Player->StopJump();
+			}
+			else
+			{
+				// 落下開始
+				m_Player->StartFall();
+			}
+
+			// 自機を移動
+			m_Player->SetTrans(trans);
+
+			m_Player->Calc();
 		}
-
-		// 自機を移動
-		m_Player->SetTrans(trans);
-
-		m_Player->Calc();
 	}
 
 	//// どこから見るのか（視点）
